@@ -7,8 +7,7 @@ const inlineSVG = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" x
 document.addEventListener('mouseup', (e) => {
   const selection = window.getSelection();
   const text = selection.toString().trim();
-  console.log('[AI DETECT] Mouseup event. Selected text:', text);
-  if (text.length >= 350 && text !== lastSelectedText) {
+  if (text !== lastSelectedText) {
     if (selection.rangeCount === 0) {
       console.warn('[AI DETECT] No range found for selection.');
       return;
@@ -57,6 +56,5 @@ function removeAIIcon() {
     aiIcon.parentNode.removeChild(aiIcon);
     aiIcon = null;
     lastSelectedText = '';
-    console.log('[AI DETECT] Icon removed from DOM');
   }
 } 

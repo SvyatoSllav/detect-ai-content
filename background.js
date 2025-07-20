@@ -23,10 +23,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
   }
   if (request.type === 'OPEN_SIDEPANEL') {
-    console.log('[AI DETECT] Received OPEN_SIDEPANEL message', sender);
     if (chrome.sidePanel && chrome.sidePanel.open) {
       if (sender.tab && sender.tab.windowId !== undefined) {
-        console.log('[AI DETECT] Calling chrome.sidePanel.open for windowId:', sender.tab.windowId);
         chrome.sidePanel.open({ windowId: sender.tab.windowId });
       } else {
         console.warn('[AI DETECT] sender.tab or sender.tab.windowId is undefined', sender.tab);
