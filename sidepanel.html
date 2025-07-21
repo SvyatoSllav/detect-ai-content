@@ -135,11 +135,12 @@
       min-width: 0;
     }
     .ai-result-label {
-      color: #6100ee;
+      color: #000;
       letter-spacing: 0.5px;
+      font-size: 16px;
     }
     .ai-result-percent {
-      color: #6100ee;
+      color: linear-gradient(90deg, #10b981, #059669);
       font-size: 20px;
       font-weight: bold;
       min-width: 48px;
@@ -156,12 +157,24 @@
     .ai-progress-bar {
       height: 100%;
       width: 0%;
-      background: #6100ee;
+      background: linear-gradient(90deg, #10b981, #059669);
       border-radius: 6px;
       transition: width 1s;
     }
     .ai-progress-bar.red { background: #ff4f4f; }
     .ai-progress-bar.yellow { background: #ffd24f; }
+    .ai-result-subtext {
+      font-size: 14px;
+      margin-top: 12px;
+      font-weight: 600;
+      color: #059669;
+    }
+    .ai-result-subtext.red {
+      color: #ff4f4f;
+    }
+    .ai-result-subtext.yellow {
+      color: #ffd24f;
+    }
   </style>
 </head>
 <body>

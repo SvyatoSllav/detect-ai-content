@@ -78,17 +78,13 @@ function showScanResult(percent) {
   const block = document.createElement('div');
   block.className = 'ai-result-block';
 
-  // Row: label and percent
+  // Row: label
   const row = document.createElement('div');
   row.className = 'ai-result-row';
   const label = document.createElement('span');
   label.className = 'ai-result-label';
-  label.textContent = 'AI Content';
-  const percentSpan = document.createElement('span');
-  percentSpan.className = 'ai-result-percent';
-  percentSpan.textContent = percent + '%';
+  label.textContent = '\u{1F916} AI Detection Result';
   row.appendChild(label);
-  row.appendChild(percentSpan);
   block.appendChild(row);
 
   // Progress bar
@@ -100,6 +96,14 @@ function showScanResult(percent) {
   else if (percent > 40) bar.classList.add('yellow');
   barContainer.appendChild(bar);
   block.appendChild(barContainer);
+
+  // Percent and text below bar
+  const percentText = document.createElement('span');
+  percentText.className = 'ai-result-subtext';
+  if (percent > 70) percentText.classList.add('red');
+  else if (percent > 40) percentText.classList.add('yellow');
+  percentText.textContent = `${percent}% likely AI-generated`;
+  block.appendChild(percentText);
 
   resultDiv.appendChild(block);
   setTimeout(() => {
