@@ -2,6 +2,9 @@ let textarea = null;
 let scanBtn = null;
 let resultDiv = null;
 let loaderDiv = null;
+let symbolCountSpan = null;
+let infoIcon = null;
+let infoTooltip = null;
 
 function showLoadingBar() {
   if (loaderDiv) {
@@ -22,6 +25,69 @@ document.addEventListener('DOMContentLoaded', async () => {
   scanBtn = document.getElementById('ai-detect-scan');
   resultDiv = document.getElementById('ai-detect-result');
   loaderDiv = document.getElementById('ai-detect-loader');
+  symbolCountSpan = document.getElementById('ai-symbol-count');
+  infoIcon = document.getElementById('ai-info-icon');
+  infoTooltip = document.getElementById('ai-info-tooltip');
+
+  function updateSymbolCount() {
+    if (!symbolCountSpan || !textarea) return
+    const len = textarea.value.length;
+    symbolCountSpan.textContent = len;
+    const labelSpan = document.querySelector('.ai-optimal-length > span:first-child');
+    if (!labelSpan) return
+
+    // Reset styles and icon visibility first
+    labelSpan.style.fontWeight = '';
+    labelSpan.style.fontSize = '';
+    if (infoIcon) infoIcon.style.display = '';
+
+    if (len < 300) {
+      labelSpan.textContent = 'Insufficient text length';
+    } else if (len >= 300 && len < 15000) {
+      labelSpan.textContent = 'Optimal text length';
+    } else if (len === 15000) {
+      labelSpan.textContent = 'Exceeded maximum text length';
+      // Hide tooltip icon
+      infoIcon.style.display = 'none';
+    }
+  }
+
+  // --- PATCH START: Make symbol count update on any value change ---
+  if (textarea) {
+    const nativeDescriptor = Object.getOwnPropertyDescriptor(
+      window.HTMLTextAreaElement.prototype, 'value'
+    );
+    Object.defineProperty(textarea, 'value', {
+      get: function() {
+        return nativeDescriptor.get.call(this);
+      },
+      set: function(val) {
+        nativeDescriptor.set.call(this, val);
+        updateSymbolCount();
+      }
+    });
+  }
+  // --- PATCH END ---
+
+  updateSymbolCount();
+  if (!textarea) return
+  textarea.addEventListener('input', updateSymbolCount);
+
+  // Tooltip show/hide logic
+  if (infoIcon && infoTooltip) {
+    infoIcon.addEventListener('mouseenter', () => {
+      infoTooltip.style.display = 'block';
+    });
+    infoIcon.addEventListener('mouseleave', () => {
+      infoTooltip.style.display = 'none';
+    });
+    infoIcon.addEventListener('focus', () => {
+      infoTooltip.style.display = 'block';
+    });
+    infoIcon.addEventListener('blur', () => {
+      infoTooltip.style.display = 'none';
+    });
+  }
 
   // Notify background that side panel is ready
   chrome.runtime.sendMessage({ type: 'SIDEPANEL_READY' });
@@ -36,9 +102,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.warn('[AI DETECT] Could not read clipboard:', err);
   }
 
+  // After filling textarea from clipboard, update symbol count
+  // (No longer needed, handled by patched setter)
+  // updateSymbolCount();
+
   scanBtn.onclick = async () => {
     showLoadingBar();
     textarea.disabled = true;
+    updateSymbolCount();
     try {
       const response = await fetch('https://ai-text-detect.ru/webhook', {
         method: 'POST',
@@ -70,6 +141,7 @@ chrome.runtime.onMessage.addListener((request) => {
     if (resultDiv) resultDiv.innerHTML = '';
     hideLoadingBar();
     if (textarea) textarea.disabled = false;
+    // updateSymbolCount(); // No longer needed, handled by patched setter
   }
 });
 

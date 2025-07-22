@@ -2,190 +2,29 @@
 <html>
 <head>
   <title>AI Text Detector Side Panel</title>
-  <style>
-    html, body {
-      height: 100%;
-      overflow: hidden;
-    }
-    body {
-      font-family: sans-serif;
-      margin: 0;
-      padding: 16px;
-      min-width: 320px;
-      min-height: 100vh;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      background-color: #fdf1fd;
-    }
-    h2 {
-      margin-top: 0;
-    }
-    .textarea-container {
-      flex: 1 1 auto;
-      display: flex;
-      flex-direction: column;
-      margin-bottom: 16px;
-    }
-    textarea {
-      flex: 1 1 auto;
-      width: 100%;
-      min-height: 120px;
-      font-size: 15px;
-      padding: 12px;
-      border-radius: 10px;
-      border: 2px solid #6100ee;
-      box-sizing: border-box;
-      outline: none;
-      transition: border-color 0.2s;
-      resize: none;
-    }
-    textarea:focus {
-      border-color: #5500d4;
-    }
-    button {
-      padding: 10px 0;
-      width: 100%;
-      background: #6100ee;
-      color: #fff;
-      font-weight: bold;
-      font-size: 16px;
-      border: none;
-      border-radius: 16px;
-      cursor: pointer;
-      transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
-    }
-    button:hover, button:focus {
-      background: #4b0bbd;
-      box-shadow: 0 2px 8px rgba(97,0,238,0.15);
-      transform: scale(1.03);
-    }
-    #ai-detect-result {
-      margin-bottom: 32px;
-    }
-    .progress-container {
-      width: 100%;
-      height: 18px;
-      background: #eee;
-      border-radius: 9px;
-      overflow: hidden;
-    }
-    .progress-bar {
-      height: 100%;
-      width: 0%;
-      background: #4fcf4f;
-      transition: width 1s;
-    }
-    .progress-bar.red { background: #ff4f4f; }
-    .progress-bar.yellow { background: #ffd24f; }
-    .loader {
-      height: 4px;
-      width: 100%;
-      max-width: 100%;
-      --c:no-repeat linear-gradient(#6100ee 0 0);
-      background: var(--c),var(--c),#d7b8fc;
-      background-size: 60% 100%;
-      animation: l16 3s infinite;
-      margin: 0;
-      border-radius: 2px;
-      display: block;
-    }
-    .button-loader-wrapper {
-      width: 100%;
-      min-height: 44px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      margin-bottom: 16px;
-    }
-    @keyframes l16 {
-      0%   {background-position:-150% 0,-150% 0}
-      66%  {background-position: 250% 0,-150% 0}
-      100% {background-position: 250% 0, 250% 0}
-    }
-    .icon-container {
-      display: flex;
-      justify-content: left;
-      align-items: center;
-      width: 100%;
-      margin-bottom: 12px;
-      gap: 12px;
-    }
-    .ai-result-block {
-      margin-top: 0;
-      padding: 20px 18px 18px 18px;
-      background: #f7f3fd;
-      border-radius: 16px;
-      box-shadow: 0 2px 8px rgba(97,0,238,0.07);
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-      min-width: 0;
-    }
-    .ai-result-row {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 18px;
-      font-weight: bold;
-      margin-bottom: 12px;
-      min-width: 0;
-    }
-    .ai-result-label {
-      color: #000;
-      letter-spacing: 0.5px;
-      font-size: 16px;
-    }
-    .ai-result-percent {
-      color: linear-gradient(90deg, #10b981, #059669);
-      font-size: 20px;
-      font-weight: bold;
-      min-width: 48px;
-      text-align: right;
-    }
-    .ai-progress-bar-container {
-      width: 100%;
-      height: 12px;
-      background: #d7b8fc;
-      border-radius: 6px;
-      overflow: hidden;
-      margin-top: 2px;
-    }
-    .ai-progress-bar {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #10b981, #059669);
-      border-radius: 6px;
-      transition: width 1s;
-    }
-    .ai-progress-bar.red { background: #ff4f4f; }
-    .ai-progress-bar.yellow { background: #ffd24f; }
-    .ai-result-subtext {
-      font-size: 14px;
-      margin-top: 12px;
-      font-weight: 600;
-      color: #059669;
-    }
-    .ai-result-subtext.red {
-      color: #ff4f4f;
-    }
-    .ai-result-subtext.yellow {
-      color: #ffd24f;
-    }
-  </style>
+  <link rel="stylesheet" href="sidepanelStyles.css">
 </head>
 <body>
-  <div class="textarea-container">
-    <textarea id="ai-detect-textarea" maxlength="1000"></textarea>
+  <div class="ai-main-flex">
+    <div class="ai-main-content">
+      <div class="textarea-container">
+        <textarea id="ai-detect-textarea" maxlength="15000"></textarea>
+      </div>
+      <div id="ai-text-info-panel" class="ai-text-info-panel">
+        <span id="ai-symbol-count" class="ai-symbol-count">0</span>
+        <span class="ai-optimal-length">
+          <span>Optimal text length</span>
+          <span id="ai-info-icon" class="ai-info-icon">&#x1F6C8;</span>
+          <span id="ai-info-tooltip" class="ai-info-tooltip" style="display:none;">Our models need a certain volume of text to determine the presence of AI accurately. The ideal text requirement is a minimum of 300 characters.</span>
+        </span>
+      </div>
+      <div class="button-loader-wrapper">
+        <button id="ai-detect-scan">Scan</button>
+        <div class="loader" id="ai-detect-loader" style="display:none;"></div>
+      </div>
+      <div id="ai-detect-result"></div>
+    </div>
   </div>
-  <div class="button-loader-wrapper">
-    <button id="ai-detect-scan">Scan</button>
-    <div class="loader" id="ai-detect-loader" style="display:none;"></div>
-  </div>
-  <div id="ai-detect-result"></div>
   <script src="sidepanel.js"></script>
 </body>
 </html>
