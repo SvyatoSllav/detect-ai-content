@@ -204,7 +204,7 @@ html, body {
   }
   .ai-info-tooltip {
     position: absolute;
-    left: -25%;
+    left: 0;
     bottom: 120%;
     background: #0a0f44;
     color: #fff;
