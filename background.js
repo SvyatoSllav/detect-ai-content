@@ -2,14 +2,6 @@ let lastTextForSidePanel = null;
 let sidePanelReady = false;
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.type === 'DETECT_AI_CONTENT') {
-    // Mock AI detection logic
-    const isAI = Math.random() > 0.5 ? 'AI-generated' : 'Human-written';
-    chrome.tabs.sendMessage(sender.tab.id, {
-      type: 'AI_DETECTION_RESULT',
-      result: `This text is likely: ${isAI}`
-    });
-  }
   if (request.type === 'SHOW_TEXT_IN_SIDEPANEL') {
     lastTextForSidePanel = request.text;
     if (sidePanelReady) {

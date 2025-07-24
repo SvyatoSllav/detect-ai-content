@@ -3,7 +3,7 @@
   "name": "AI Text Detector",
   "version": "1.0",
   "description": "Detect if selected text is AI-generated.",
-  "permissions": ["scripting", "activeTab", "contextMenus", "sidePanel"],
+  "permissions": ["sidePanel"],
   "background": {
     "service_worker": "background.js"
   },

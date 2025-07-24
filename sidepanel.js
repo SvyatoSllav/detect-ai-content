@@ -5,6 +5,7 @@ let loaderDiv = null;
 let symbolCountSpan = null;
 let infoIcon = null;
 let infoTooltip = null;
+const BASE_URL = 'https://ai-text-detect.ru/webhook';
 
 function showLoadingBar() {
   if (loaderDiv) {
@@ -52,7 +53,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
-  // --- PATCH START: Make symbol count update on any value change ---
   if (textarea) {
     const nativeDescriptor = Object.getOwnPropertyDescriptor(
       window.HTMLTextAreaElement.prototype, 'value'
@@ -67,7 +67,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     });
   }
-  // --- PATCH END ---
 
   updateSymbolCount();
   if (!textarea) return
@@ -102,16 +101,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.warn('[AI DETECT] Could not read clipboard:', err);
   }
 
-  // After filling textarea from clipboard, update symbol count
-  // (No longer needed, handled by patched setter)
-  // updateSymbolCount();
-
   scanBtn.onclick = async () => {
     showLoadingBar();
     textarea.disabled = true;
     updateSymbolCount();
     try {
-      const response = await fetch('https://ai-text-detect.ru/webhook', {
+      const response = await fetch(BASE_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text: textarea.value })
@@ -141,7 +136,6 @@ chrome.runtime.onMessage.addListener((request) => {
     if (resultDiv) resultDiv.innerHTML = '';
     hideLoadingBar();
     if (textarea) textarea.disabled = false;
-    // updateSymbolCount(); // No longer needed, handled by patched setter
   }
 });
 
